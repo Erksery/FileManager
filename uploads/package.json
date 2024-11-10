@@ -1,0 +1,15 @@
+{
+  "name": "youtubeDownloader",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon run.js"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "nodemon": "^3.1.4",
+    "python-shell": "^5.0.0"
+  }
+}
