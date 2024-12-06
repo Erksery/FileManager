@@ -39,8 +39,8 @@ userRoutes.post("/registration", regValidator, (req, res) => {
   }
 });
 
-userRoutes.get("/login", (req, res) => {
-  const enteredData = req.query;
+userRoutes.post("/login", (req, res) => {
+  const enteredData = req.body;
   console.log(enteredData);
   login({ ...req.locals, res, enteredData });
 });

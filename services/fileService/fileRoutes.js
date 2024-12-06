@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const sharp = require("sharp");
 const { File, Folder } = require("../../commands/sql/models/usersDatabase");
 const { authenticateToken } = require("../../middleware/authenticateToken");
 const { upload } = require("../../commands/scripts/multer");

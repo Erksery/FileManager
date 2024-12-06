@@ -1,5 +1,6 @@
 const cors = require("cors");
 const fs = require("fs");
+const path = require("path");
 const {
   UserData,
   Folder,
@@ -15,10 +16,6 @@ const adminRoutes = require("./services/adminService/adminRoutes");
 
 server.use(cors());
 
-server.get("/", (req, res) => {
-  res.send("test");
-});
-
 server.get("/image/:id", (req, res) => {
   const name = req.params.id;
   try {
@@ -27,12 +24,44 @@ server.get("/image/:id", (req, res) => {
         console.log("Ошибка при загрузке изображения", err);
         res.status(500);
       } else {
-        // res.setHeader("Content-Type", "image/png");
+        //res.setHeader("Content-Type", "image/png");
         res.send(data);
       }
     });
   } catch (err) {
     console.log("Ошибка загрузки изображения", err);
+  }
+});
+
+server.get("/compressedImage/:id", (req, res) => {
+  const name = req.params.id;
+
+  // Извлекаем имя файла без расширения и добавляем .webp
+  const fileNameWithoutExtension = path.parse(name).name; // Получаем имя файла без расширения
+  const compressedFileName = `${fileNameWithoutExtension}.webp`; // Добавляем .webp
+
+  const filePath = path.join("compressedImages", compressedFileName); // Строим путь к файлу
+
+  try {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.log("Ошибка при загрузке изображения", err);
+        return res
+          .status(500)
+          .json({ error: "Ошибка при загрузке изображения" });
+      }
+
+      // Устанавливаем заголовки для изображения WebP
+      res.setHeader("Content-Type", "image/webp");
+
+      // Отправляем файл клиенту
+      res.send(data);
+    });
+  } catch (err) {
+    console.log("Ошибка при загрузке изображения", err);
+    return res
+      .status(500)
+      .json({ error: "Произошла ошибка при обработке изображения" });
   }
 });
 

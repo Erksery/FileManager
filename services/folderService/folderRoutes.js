@@ -28,7 +28,7 @@ folderRoutes.post("/createFolder/:id?", authenticateToken, (req, res) => {
 
 folderRoutes.delete("/deleteFolder/:id", authenticateToken, (req, res) => {
   const id = req.params.id;
-  deleteFolder({ ...req.locals, res, id });
+  deleteFolder({ ...req.locals, res, id, user: req.user });
 });
 
 folderRoutes.post("/editFolder/:id", authenticateToken, (req, res) => {

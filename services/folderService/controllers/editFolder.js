@@ -1,26 +1,22 @@
 const editFolder = async ({ Folder, res, id, enteredData, user }) => {
   try {
-    // Проверка входных данных
     if (!isValidInput(id, enteredData)) {
       return res
         .status(400)
         .json({ error: "Недостаточно данных для редактирования папки" });
     }
 
-    // Поиск папки в базе данных
     const folder = await findFolderById(Folder, id);
     if (!folder) {
       return res.status(404).json({ error: "Папка не найдена" });
     }
 
-    // Проверка прав пользователя
     if (!userHasPermission(user, folder)) {
       return res
         .status(403)
         .json({ error: "Недостаточно прав для редактирования папки" });
     }
 
-    // Обновление папки и её вложенных подпапок
     const updateResult = await updateFolderAndSubfolders(
       folder,
       enteredData,
@@ -55,13 +51,11 @@ const updateFolderAndSubfolders = async (folder, data, Folder) => {
 
   await folder.update(updateData);
 
-  // Находим все прямые дочерние папки текущей папки
   const subFolders = await Folder.findAll({ where: { inFolder: folder.id } });
 
   if (subFolders.length > 0) {
     await Promise.all(
       subFolders.map(async (subFolder) => {
-        // Рекурсивно обновляем вложенные подпапки, передавая только поле privacy
         await updateFolderAndSubfolders(
           subFolder,
           { privacy: data.privacy },
